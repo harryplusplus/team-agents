@@ -2,6 +2,7 @@ import json
 import re
 from typing import TypeVar
 
+import typer
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 
@@ -82,3 +83,7 @@ def parse_llm_output(
 
 def format_messages(messages: list[BaseMessage]) -> str:
     return "\n".join(f"{m.type}: {m.content}" for m in messages)
+
+
+def log(log):
+    typer.secho(log, fg=typer.colors.GREEN)

@@ -5,8 +5,8 @@ from team_agents.nodes.plan import PlanNode
 from team_agents.state import State, Status
 
 
-class ReportResultAnalysisNode:
-    name = "report_result_analysis"
+class ReportFeedbackAnalysisNode:
+    name = "report_feedback_analysis"
 
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm

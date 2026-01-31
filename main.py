@@ -9,12 +9,13 @@ from dotenv import load_dotenv
 from team_agents.commands.new import new as new_command
 from team_agents.commands.resume import resume as resume_command
 from team_agents.commands.time_travel import time_travel as time_travel_command
+from team_agents.utils import log
 
 load_dotenv()
 
 
 if os.environ.get("DEBUG"):
-    typer.secho("Debug mode enabled.", fg=typer.colors.GREEN)
+    log("Debug mode enabled.")
     logging.basicConfig(level=logging.DEBUG)
 
 
@@ -22,8 +23,8 @@ app = typer.Typer()
 
 
 @app.command()
-def new(request_file: Path = typer.Option(..., help="Request file path")):
-    asyncio.run(new_command(request_file))
+def new(task_file: Path = typer.Option(..., help="Task file path")):
+    asyncio.run(new_command(task_file))
 
 
 @app.command()

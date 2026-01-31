@@ -1,30 +1,28 @@
 from pathlib import Path
 
 import nanoid
-import typer
 from langchain_core.messages import HumanMessage
 
 from team_agents.config import create_config
 from team_agents.run import run
 from team_agents.state import State, Status
+from team_agents.utils import log
 
 
-async def new(request_file: Path):
-    typer.secho("new command called.", fg=typer.colors.GREEN)
+async def new(task_file: Path):
+    log("new command called.")
 
-    with request_file.open() as f:
-        request = f.read()
+    with task_file.open() as f:
+        task = f.read()
 
-    typer.secho(
-        f"begin request content from file: {request_file}", fg=typer.colors.GREEN
-    )
-    typer.secho(request, fg=typer.colors.GREEN)
-    typer.secho("end request content.", fg=typer.colors.GREEN)
+    log(f"begin task content from file: {task_file}")
+    log(task)
+    log("end task content.")
 
     thread_id = nanoid.generate()
-    typer.secho(f"thread id: {thread_id}")
+    log(f"thread id: {thread_id}")
 
-    state = State(status=Status.TO_PLAN, messages=[HumanMessage(content=request)])
+    state = State(status=Status.TO_PLAN, messages=[HumanMessage(content=task)])
     config = create_config(thread_id)
 
     await run(state, config)

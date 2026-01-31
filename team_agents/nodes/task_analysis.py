@@ -3,7 +3,7 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
 from team_agents.nodes.plan import PlanNode
-from team_agents.nodes.question import QuestionNode
+from team_agents.nodes.task_question import TaskQuestionNode
 from team_agents.state import State, Status
 from team_agents.utils import format_messages, parse_llm_output
 
@@ -13,14 +13,14 @@ class Result(BaseModel):
     question: str = ""
 
 
-class RequestAnalysisNode:
-    name = "request_analysis"
+class TaskAnalysisNode:
+    name = "task_analysis"
 
     @staticmethod
     def to_question_or_plan(state: State) -> str:
         status = state["status"]
         if status == Status.TO_QUESTION:
-            return QuestionNode.name
+            return TaskQuestionNode.name
         elif status == Status.TO_PLAN:
             return PlanNode.name
 
