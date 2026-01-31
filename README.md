@@ -9,12 +9,12 @@ Human-in-the-loop 대화형 멀티에이전트 작업 시스템
 ## 기능
 
 - **멀티 에이전트 시스템** - 에이전트별 목적에 맞는 프롬프트, 툴, 템퍼러처 적용
-  - `TaskAnalysis` - 사용자 요청 분석 및 질문 생성
-  - `Plan` - 계획 수립
-  - `Execution` - 작업 실행 (웹 검색 등 툴 사용)
-  - `Review` - 실행 결과 검토 (반려 시 재계획)
-  - `Report` - 최종 리포트 작성
-  - `ReportFeedbackAnalysis` - 피드백 분석 (종료 또는 재계획)
+  - `TaskAnalysis` (0.2) - 사용자 요청 분석 및 질문 생성
+  - `Plan` (0.3) - 계획 수립
+  - `Execution` (0.5) - 작업 실행 (웹 검색 등 툴 사용)
+  - `Review` (0.3) - 실행 결과 검토 (반려 시 재계획)
+  - `Report` (0.2) - 최종 리포트 작성
+  - `ReportFeedbackAnalysis` (0.2) - 피드백 분석 (종료 또는 재계획)
 - **휴먼 인 더 루프** - LangGraph interrupt 기반 질문/피드백 수집
   - `TaskQuestion` - 요청 명확화를 위한 사용자 질문
   - `ReportFeedback` - 리포트 승인/반려를 위한 사용자 피드백
