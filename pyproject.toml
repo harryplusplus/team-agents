@@ -1,7 +1,7 @@
 [project]
 name = "team-agents"
 version = "0.1.0"
-description = "Task Multi-Agent System"
+description = "Human-in-the-loop Conversational Multi-Agent Task System"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

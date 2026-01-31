@@ -1,6 +1,6 @@
 # Team Agents
 
-멀티 에이전트 과제 수행 시스템
+Human-in-the-loop 대화형 멀티에이전트 작업 시스템
 
 ## 목적
 
