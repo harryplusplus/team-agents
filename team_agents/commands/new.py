@@ -22,7 +22,13 @@ async def new(task_file: Path):
     thread_id = nanoid.generate()
     log(f"thread id: {thread_id}")
 
-    state = State(status=Status.TO_PLAN, messages=[HumanMessage(content=task)])
+    state = State(
+        status=Status.IN_PROGRESS,
+        messages=[HumanMessage(content=task)],
+        plan=None,
+        current_step=None,
+        step_results=None,
+    )
     config = create_config(thread_id)
 
     await run(state, config)

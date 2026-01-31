@@ -87,8 +87,8 @@ def create_conversation_history(messages: list[BaseMessage]) -> str:
     return "\n".join(f"{m.type}: {m.content}" for m in messages)
 
 
-def log(log):
-    typer.secho(log, fg=typer.colors.GREEN)
+def log(log, fg=typer.colors.GREEN):
+    typer.secho(log, fg=fg)
 
 
 def sanitize_utf8(text: str):
@@ -96,7 +96,13 @@ def sanitize_utf8(text: str):
 
 
 def log_state(name: str, state: State):
-    log(f"=== {name} ===")
-    log(create_conversation_history(state["messages"]))
+    log(f"=== {name} ===", fg=typer.colors.CYAN)
+    for m in state["messages"]:
+        if m.type == "human":
+            log(f"{m.type}: {m.content}")
+        elif m.type == "ai":
+            log(f"{m.type}: {m.content}", fg=typer.colors.YELLOW)
+        else:
+            log(f"{m.type}: {m.content}")
     log(f"status: {state['status']}")
-    log("====================")
+    log("====================", fg=typer.colors.CYAN)

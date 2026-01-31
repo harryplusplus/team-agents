@@ -35,7 +35,9 @@ def create_graph(checkpointer: Checkpointer):
     builder.add_edge(TaskQuestionNode.name, TaskAnalysisNode.name)
     builder.add_edge(PlanNode.name, ExecutionNode.name)
     builder.add_edge(ExecutionNode.name, ReviewNode.name)
-    builder.add_conditional_edges(ReviewNode.name, ReviewNode.to_plan_or_report)
+    builder.add_conditional_edges(
+        ReviewNode.name, ReviewNode.to_plan_or_next_step_or_report
+    )
     builder.add_edge(ReportNode.name, ReportFeedbackNode.name)
     builder.add_edge(ReportFeedbackNode.name, ReportFeedbackAnalysisNode.name)
     builder.add_conditional_edges(

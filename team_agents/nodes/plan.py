@@ -6,7 +6,7 @@ from team_agents.state import State, Status
 from team_agents.utils import create_conversation_history, log_state, parse_llm_output
 
 
-class Plan(BaseModel):
+class PlanInput(BaseModel):
     title: str
     steps: list[str]
 
@@ -22,7 +22,12 @@ class PlanNode:
 
         prompt = self._build_prompt(create_conversation_history(state["messages"]))
         response = await self.llm.ainvoke(prompt)
-        result = parse_llm_output(response.content, Plan)
+        result = parse_llm_output(response.content, PlanInput)
+
+        # 계획을 State에 저장
+        state["plan"] = {"title": result.title, "steps": result.steps}
+        state["current_step"] = 0
+        state["step_results"] = []
 
         state["messages"].append(
             AIMessage(

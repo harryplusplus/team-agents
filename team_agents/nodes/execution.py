@@ -5,7 +5,12 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
 from team_agents.state import State, Status
-from team_agents.utils import create_conversation_history, log, log_state, parse_llm_output
+from team_agents.utils import (
+    create_conversation_history,
+    log,
+    log_state,
+    parse_llm_output,
+)
 
 
 @tool
@@ -31,8 +36,14 @@ class ExecutionNode:
     async def __call__(self, state: State) -> State:
         state["status"] = Status.IN_PROGRESS
 
+        # 현재 스텝 정보 가져오기
+        plan = state["plan"]
+        current_step_idx = state["current_step"] if state["current_step"] is not None else 0
+        steps = plan["steps"] if plan else []
+        current_step = steps[current_step_idx] if steps else "작업 진행"
+
         conversation_history = create_conversation_history(state["messages"])
-        prompt = self._build_prompt(conversation_history)
+        prompt = self._build_prompt(conversation_history, current_step)
         response = await self.llm.ainvoke(prompt)
 
         result: Execution | None = None
@@ -59,18 +70,25 @@ class ExecutionNode:
         if result is None:
             raise ValueError("Failed to parse LLM output")
 
+        # 실행 결과를 step_results에 추가
+        if state["step_results"] is None:
+            state["step_results"] = []
+        state["step_results"].append(f"{result.result}\n\n설명: {result.explanation}")
+
         state["messages"].append(
             AIMessage(
-                content=f"실행 결과:\n\n{result.result}\n\n설명:\n{result.explanation}"
+                content=f"[{current_step_idx + 1}/{len(steps)}] {current_step}\n\n실행 결과:\n\n{result.result}\n\n설명:\n{result.explanation}"
             )
         )
 
         log_state(self.name, state)
         return state
 
-    def _build_prompt(self, conversation_history: str) -> str:
+    def _build_prompt(self, conversation_history: str, current_step: str) -> str:
         return f"""당신은 작업을 실행하는 개발자입니다.
 수립된 계획을 바탕으로 작업을 수행하세요.
+
+현재 실행할 작업: {current_step}
 필요한 경우 웹 검색 도구를 사용하여 최신 정보를 확인하세요.
 
 대화 기록:

@@ -2,6 +2,7 @@ from langchain_core.messages import AIMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
+from team_agents.nodes.execution import ExecutionNode
 from team_agents.nodes.plan import PlanNode
 from team_agents.nodes.report import ReportNode
 from team_agents.state import State, Status
@@ -17,10 +18,12 @@ class ReviewNode:
     name = "review"
 
     @staticmethod
-    def to_plan_or_report(state: State) -> str:
+    def to_plan_or_next_step_or_report(state: State) -> str:
         status = state["status"]
         if status == Status.TO_PLAN:
             return PlanNode.name
+        elif status == Status.TO_NEXT_STEP:
+            return ExecutionNode.name
         elif status == Status.TO_REPORT:
             return ReportNode.name
 
@@ -32,32 +35,53 @@ class ReviewNode:
     async def __call__(self, state: State) -> State:
         state["status"] = Status.IN_PROGRESS
 
+        # 현재 스텝 정보
+        plan = state["plan"]
+        current_step_idx = state["current_step"] if state["current_step"] is not None else 0
+        steps = plan["steps"] if plan else []
+        current_step = steps[current_step_idx] if steps else "작업"
+
         conversation_history = create_conversation_history(state["messages"])
-        prompt = self._build_prompt(conversation_history)
+        prompt = self._build_prompt(conversation_history, current_step)
         response = await self.llm.ainvoke(prompt)
         result = parse_llm_output(response.content, Review)
 
         if result.is_satisfactory:
-            state["status"] = Status.TO_REPORT
-            state["messages"].append(
-                AIMessage(
-                    content="검토 결과: 실행 결과가 만족스럽습니다. 리포트를 작성합니다."
+            # 다음 스텝이 있는지 확인
+            next_step_idx = current_step_idx + 1
+            if next_step_idx < len(steps):
+                # 다음 스텝으로
+                state["current_step"] = next_step_idx
+                state["status"] = Status.TO_NEXT_STEP
+                next_step = steps[next_step_idx]
+                state["messages"].append(
+                    AIMessage(
+                        content=f"검토 결과: 통과했습니다.\n\n다음 작업: {next_step}"
+                    )
                 )
-            )
+            else:
+                # 모든 스텝 완료
+                state["status"] = Status.TO_REPORT
+                state["messages"].append(
+                    AIMessage(content="검토 결과: 모든 작업이 완료되었습니다. 리포트를 작성합니다.")
+                )
         else:
+            # 반려 - 계획부터 다시 (현재는 이 방식)
             state["status"] = Status.TO_PLAN
             state["messages"].append(
                 AIMessage(
-                    content=f"검토 결과: 실행 결과가 부족합니다.\n\n피드백:\n{result.feedback}"
+                    content=f"검토 결과: 반려되었습니다.\n\n피드백:\n{result.feedback}\n\n계획을 다시 세웁니다."
                 )
             )
 
         log_state(self.name, state)
         return state
 
-    def _build_prompt(self, conversation_history: str) -> str:
+    def _build_prompt(self, conversation_history: str, current_step: str) -> str:
         return f"""당신은 작업 결과를 검토하는 리뷰어입니다.
-실행 결과가 원래 요청사항을 충족하는지 검토하세요.
+현재 스텝의 실행 결과가 요청사항을 충족하는지 검토하세요.
+
+현재 검토할 작업: {current_step}
 
 대화 기록:
 {conversation_history}
