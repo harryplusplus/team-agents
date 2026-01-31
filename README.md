@@ -10,9 +10,30 @@
 
 **애플 실리콘 기반 macOS 이외의 플랫폼/아키텍처는 테스트되지 않았습니다.**
 
+### AI Model: GLM-4.7
+
+Z.ai의 [GLM Coding Plan](https://docs.z.ai/devpack/overview)을 사용합니다.
+Claude API와 호환됩니다.
+
+`.claude/settings.local.json` 파일에 API Key를 `env.ANTHROPIC_AUTH_TOKEN`에 넣어주세요.
+
+_이 파일은 커밋되지 않습니다. `.gitignore` 내 `.claude/*.local.*` 패턴입니다._
+
+```json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "your token",
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
+```
+
 ### Claude Code
 
-공동 작업자입니다. 같이 의논하고 고민하고 해결하는데 사용합니다.
+공동 작업자입니다.
+같이 의논하고 고민하고 해결하는데 사용합니다.
 
 설치: [Claude Code Overview](https://code.claude.com/docs/en/overview)
 
