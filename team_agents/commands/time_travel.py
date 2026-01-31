@@ -1,7 +1,7 @@
 import typer
 
-from team_agents.graph import get_graph
-from team_agents.shared import build_config
+from team_agents.config import create_config
+from team_agents.run import run
 
 
 async def time_travel(thread_id: str, checkpoint_id: str):
@@ -10,10 +10,5 @@ async def time_travel(thread_id: str, checkpoint_id: str):
         fg=typer.colors.GREEN,
     )
 
-    async with get_graph() as graph:
-        result = await graph.ainvoke(
-            None,
-            config=build_config(thread_id, checkpoint_id),
-        )
-
-        typer.secho(result, fg=typer.colors.GREEN)
+    config = create_config(thread_id, checkpoint_id)
+    await run(None, config)

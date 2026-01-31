@@ -4,8 +4,9 @@ import nanoid
 import typer
 from langchain_core.messages import HumanMessage
 
-from team_agents.graph import get_graph
-from team_agents.shared import State, Status, build_config
+from team_agents.config import create_config
+from team_agents.run import run
+from team_agents.state import State, Status
 
 
 async def new(request_file: Path):
@@ -23,10 +24,7 @@ async def new(request_file: Path):
     thread_id = nanoid.generate()
     typer.secho(f"thread id: {thread_id}")
 
-    async with get_graph() as graph:
-        result = await graph.ainvoke(
-            State(status=Status.TO_PLAN, messages=[HumanMessage(content=request)]),
-            config=build_config(thread_id),
-        )
+    state = State(status=Status.TO_PLAN, messages=[HumanMessage(content=request)])
+    config = create_config(thread_id)
 
-        typer.secho(result, fg=typer.colors.GREEN)
+    await run(state, config)

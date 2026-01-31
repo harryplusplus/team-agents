@@ -2,6 +2,7 @@ import json
 import re
 from typing import TypeVar
 
+from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 
 T = TypeVar("T", bound=BaseModel)
@@ -77,3 +78,7 @@ def parse_llm_output(
     json_str = _extract_json(text)
     data = json.loads(json_str)
     return schema.model_validate(data)
+
+
+def format_messages(messages: list[BaseMessage]) -> str:
+    return "\n".join(f"{m.type}: {m.content}" for m in messages)

@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END
 
 from team_agents.nodes.plan import PlanNode
-from team_agents.shared import State, Status
+from team_agents.state import State, Status
 
 
 class ReportResultAnalysisNode:

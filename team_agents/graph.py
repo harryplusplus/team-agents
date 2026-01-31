@@ -1,8 +1,4 @@
-import os
-from contextlib import asynccontextmanager
-
 from langchain_openai import ChatOpenAI
-from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.graph import START, StateGraph
 from langgraph.types import Checkpointer
 
@@ -15,10 +11,10 @@ from team_agents.nodes.request_analysis import (
     RequestAnalysisNode,
 )
 from team_agents.nodes.review import ReviewNode
-from team_agents.shared import State
+from team_agents.state import State
 
 
-def build_graph(checkpointer: Checkpointer, llm: ChatOpenAI):
+def create_graph(checkpointer: Checkpointer, llm: ChatOpenAI):
     builder = StateGraph(State)
     builder.add_node(RequestAnalysisNode.name, RequestAnalysisNode(llm))
     builder.add_node(QuestionNode.name, QuestionNode())
@@ -42,20 +38,3 @@ def build_graph(checkpointer: Checkpointer, llm: ChatOpenAI):
     )
 
     return builder.compile(checkpointer=checkpointer)
-
-
-@asynccontextmanager
-async def get_graph():
-    async with AsyncPostgresSaver.from_conn_string(
-        os.environ["DATABASE_URL"]
-    ) as checkpointer:
-        await checkpointer.setup()
-
-        llm = ChatOpenAI(
-            base_url=os.environ["API_URL"],
-            api_key=lambda: os.environ["API_KEY"],
-            model=os.environ["MODEL"],
-            verbose=True if os.environ.get("DEBUG") else False,
-        )
-
-        yield build_graph(checkpointer, llm)

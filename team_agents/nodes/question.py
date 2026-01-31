@@ -1,7 +1,7 @@
 from langchain_core.messages import HumanMessage
 from langgraph.types import interrupt
 
-from team_agents.shared import State, Status
+from team_agents.state import State, Status
 
 
 class QuestionNode:
