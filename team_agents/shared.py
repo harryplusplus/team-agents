@@ -25,3 +25,7 @@ def build_config(thread_id: str, checkpoint_id: str | None = None):
         configurable["checkpoint_id"] = checkpoint_id
 
     return RunnableConfig(configurable=configurable)
+
+
+def format_messages(messages: list[BaseMessage]) -> str:
+    return "\n".join(f"{m.type}: {m.content}" for m in messages)

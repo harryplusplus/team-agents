@@ -1,4 +1,6 @@
 import asyncio
+import logging
+import os
 from pathlib import Path
 
 import typer
@@ -9,6 +11,12 @@ from team_agents.commands.resume import resume as resume_command
 from team_agents.commands.time_travel import time_travel as time_travel_command
 
 load_dotenv()
+
+
+if os.environ.get("DEBUG"):
+    typer.secho("Debug mode enabled.", fg=typer.colors.GREEN)
+    logging.basicConfig(level=logging.DEBUG)
+
 
 app = typer.Typer()
 
