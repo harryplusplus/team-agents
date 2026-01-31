@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from team_agents.nodes.plan import PlanNode
 from team_agents.nodes.task_question import TaskQuestionNode
 from team_agents.state import State, Status
-from team_agents.utils import format_messages, parse_llm_output
+from team_agents.utils import create_conversation_history, parse_llm_output
 
 
 class Result(BaseModel):
@@ -32,7 +32,7 @@ class TaskAnalysisNode:
     async def __call__(self, state: State) -> State:
         state["status"] = Status.IN_PROGRESS
 
-        prompt = self._build_prompt(format_messages(state["messages"]))
+        prompt = self._build_prompt(create_conversation_history(state["messages"]))
         response = await self.llm.ainvoke(prompt)
         result = parse_llm_output(response.content, Result)
 

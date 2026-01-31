@@ -81,7 +81,7 @@ def parse_llm_output(
     return schema.model_validate(data)
 
 
-def format_messages(messages: list[BaseMessage]) -> str:
+def create_conversation_history(messages: list[BaseMessage]) -> str:
     return "\n".join(f"{m.type}: {m.content}" for m in messages)
 
 
