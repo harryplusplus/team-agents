@@ -87,3 +87,7 @@ def create_conversation_history(messages: list[BaseMessage]) -> str:
 
 def log(log):
     typer.secho(log, fg=typer.colors.GREEN)
+
+
+def sanitize_utf8(text: str):
+    return text.encode("utf-8", errors="replace").decode("utf-8")

@@ -9,7 +9,7 @@ from psycopg_pool import AsyncConnectionPool
 from team_agents.graph import create_graph
 from team_agents.llm import create_llm
 from team_agents.state import State
-from team_agents.utils import log
+from team_agents.utils import log, sanitize_utf8
 
 
 async def run(state: State | None, config: RunnableConfig):
@@ -34,7 +34,7 @@ async def run(state: State | None, config: RunnableConfig):
 
             ai_message = result["__interrupt__"][0].value
             user_message = typer.prompt(ai_message)
-            current_input = Command(resume=user_message)
+            current_input = Command(resume=sanitize_utf8(user_message))
 
         log(result)
 
