@@ -55,10 +55,19 @@ class TaskAnalysisNode:
 대화 기록:
 {conversation_history}
 
-JSON 포맷으로 응답하세요.
-{{"has_question": true/false, "question": "질문 내용" }}
+중요: JSON만 출력하세요. 다른 텍스트를 절대 추가하지 마세요. ```json 코드 블록도 사용하지 마세요.
 
-응답 예시:
-{{"has_question": true, "question": "1. 어떤 플랫폼용 계산기인가요? (웹, 모바일, 데스크톱)\n2. 어떤 기능이 필요한가요?"}}
-{{"has_question": false, "question": ""}} 
+출력 형식:
+{{"has_question": true/false, "question": "질문 내용"}}
+
+예시 1 - 질문이 있는 경우:
+{{"has_question": true, "question": "1. 어떤 플랫폼용 계산기를 원하시나요? (웹, 모바일, 데스크톱)\\n2. 어떤 연산 기능이 필요한가요? (기본 사칙연산, 공학용, 복소수 등)\\n3. 디자인 스타일이 있나요?"}}
+
+예시 2 - 질문이 없는 경우:
+{{"has_question": false, "question": ""}}
+
+예시 3 - 질문이 있는 경우:
+{{"has_question": true, "question": "어떤 프로그래밍 언어를 사용하시겠습니까? Python, JavaScript, Java 중에서 선택해주세요."}}
+
+이제 분석 결과를 JSON으로만 출력하세요.
 """

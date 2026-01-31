@@ -75,11 +75,21 @@ class ExecutionNode:
 대화 기록:
 {conversation_history}
 
-JSON 포맷으로 응답하세요:
-{{"result": "실행 결과", "explanation": "설명"}}
+중요: JSON만 출력하세요. 다른 텍스트를 절대 추가하지 마세요. ```json 코드 블록도 사용하지 마세요.
 
-응답 예시:
-{{"result": "검색 결과: Python 3.13은 2024년 10월 출시되었습니다.", "explanation": "웹 검색을 통해 최신 정보를 확인했습니다."}}
+출력 형식:
+{{"result": "실행 결과 내용", "explanation": "설명"}}
+
+예시 1 - 웹 검색으로 답변:
+{{"result": "Python 3.13은 2024년 10월 7일에 출시되었습니다. 주요 특징은 실험적인 JIT 컴파일러와 개선된 에러 메시지입니다.", "explanation": "웹 검색을 통해 Python 3.13의 출시일과 주요 특징을 확인했습니다."}}
+
+예시 2 - 코드 작성:
+{{"result": "def add(a, b):\\n    return a + b\\n\\ndef subtract(a, b):\\n    return a - b", "explanation": "요청한 덧셈과 뺄셈 함수를 작성했습니다."}}
+
+예시 3 - 분석 결과:
+{{"result": "해당 이슈는 메모리 누수로 인해 발생합니다. 객체가 제때 해제되지 않고 있습니다.", "explanation": "코드를 분석한 결과, 이벤트 리스너가 제거되지 않아 메모리 누수가 발생하고 있음을 확인했습니다."}}
+
+이제 실행 결과를 JSON으로만 출력하세요.
 """
 
     def _build_followup_prompt(
@@ -100,6 +110,16 @@ JSON 포맷으로 응답하세요:
 검색 결과:
 {search_result}
 
-JSON 포맷으로 응답하세요:
+중요: JSON만 출력하세요. 다른 텍스트를 절대 추가하지 마세요. ```json 코드 블록도 사용하지 마세요.
+
+출력 형식:
 {{"result": "최종 답변", "explanation": "설명"}}
+
+예시 1:
+{{"result": "파이썬 3.13의 새로운 기능: 1) 실험적 JIT 컴파일러 2) 개선된 에러 메시지 3) 타입 시스템 개선", "explanation": "검색 결과를 바탕으로 Python 3.13의 주요 신규 기능을 정리했습니다."}}
+
+예시 2:
+{{"result": "LangGraph는 LangChain 팀이 개발한 상태 기반 에이전트 워크플로우 프레임워크입니다.", "explanation": "공식 문서 검색 결과를 통해 LangGraph의 정의를 확인했습니다."}}
+
+이제 검색 결과를 분석한 답변을 JSON으로만 출력하세요.
 """

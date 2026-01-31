@@ -61,10 +61,22 @@ class ReviewNode:
 대화 기록:
 {conversation_history}
 
-JSON 포맷으로 응답하세요:
+중요: JSON만 출력하세요. 다른 텍스트를 절대 추가하지 마세요. ```json 코드 블록도 사용하지 마세요.
+
+출력 형식:
 {{"is_satisfactory": true/false, "feedback": "피드백 내용"}}
 
-응답 예시:
+예시 1 - 만족스러운 경우:
 {{"is_satisfactory": true, "feedback": ""}}
-{{"is_satisfactory": false, "feedback": "계산기의 소수점 처리가 누락되었습니다. 추가 구현이 필요합니다."}}
+
+예시 2 - 부족한 경우:
+{{"is_satisfactory": false, "feedback": "계산기의 소수점 처리가 누락되었습니다. 10 / 3 = 3.33... 처럼 소수점 계산이 필요합니다."}}
+
+예시 3 - 부족한 경우:
+{{"is_satisfactory": false, "feedback": "요청한 '음수 입력 처리' 기능이 구현되지 않았습니다. 다시 구현해주세요."}}
+
+예시 4 - 만족스러운 경우:
+{{"is_satisfactory": true, "feedback": ""}}
+
+이제 검토 결과를 JSON으로만 출력하세요.
 """
