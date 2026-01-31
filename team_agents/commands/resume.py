@@ -15,4 +15,4 @@ async def resume(thread_id: str):
             config=build_config(thread_id),
         )
 
-        typer.echo(result)
+        typer.secho(result, fg=typer.colors.GREEN)

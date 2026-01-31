@@ -17,7 +17,7 @@ async def new(request_file: Path):
     typer.secho(
         f"begin request content from file: {request_file}", fg=typer.colors.GREEN
     )
-    typer.secho(request)
+    typer.secho(request, fg=typer.colors.GREEN)
     typer.secho("end request content.", fg=typer.colors.GREEN)
 
     thread_id = nanoid.generate()
@@ -29,4 +29,4 @@ async def new(request_file: Path):
             config=build_config(thread_id),
         )
 
-        typer.echo(result)
+        typer.secho(result, fg=typer.colors.GREEN)

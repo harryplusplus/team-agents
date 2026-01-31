@@ -21,7 +21,7 @@ from team_agents.shared import State
 def build_graph(checkpointer: Checkpointer, llm: ChatOpenAI):
     builder = StateGraph(State)
     builder.add_node(RequestAnalysisNode.name, RequestAnalysisNode(llm))
-    builder.add_node(QuestionNode.name, QuestionNode(llm))
+    builder.add_node(QuestionNode.name, QuestionNode())
     builder.add_node(PlanNode.name, PlanNode(llm))
     builder.add_node(ExecutionNode.name, ExecutionNode(llm))
     builder.add_node(ReviewNode.name, ReviewNode(llm))

@@ -16,4 +16,4 @@ async def time_travel(thread_id: str, checkpoint_id: str):
             config=build_config(thread_id, checkpoint_id),
         )
 
-        typer.echo(result)
+        typer.secho(result, fg=typer.colors.GREEN)
