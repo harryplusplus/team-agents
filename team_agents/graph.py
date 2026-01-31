@@ -20,7 +20,7 @@ def create_graph(checkpointer: Checkpointer):
     builder.add_node(TaskAnalysisNode.name, TaskAnalysisNode(create_llm(0.3)))
     builder.add_node(TaskQuestionNode.name, TaskQuestionNode())
     builder.add_node(PlanNode.name, PlanNode(create_llm(0.2)))
-    builder.add_node(ExecutionNode.name, ExecutionNode(create_llm(0.5)))
+    builder.add_node(ExecutionNode.name, ExecutionNode(create_llm(0.2)))
     builder.add_node(ReviewNode.name, ReviewNode(create_llm(0.3)))
     builder.add_node(ReportNode.name, ReportNode(create_llm(0.2)))
     builder.add_node(ReportFeedbackNode.name, ReportFeedbackNode())
