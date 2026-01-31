@@ -1,7 +1,7 @@
-from langchain_openai import ChatOpenAI
 from langgraph.graph import START, StateGraph
 from langgraph.types import Checkpointer
 
+from team_agents.llm import create_llm
 from team_agents.nodes.execution import ExecutionNode
 from team_agents.nodes.plan import PlanNode
 from team_agents.nodes.report import ReportNode
@@ -15,16 +15,18 @@ from team_agents.nodes.task_question import TaskQuestionNode
 from team_agents.state import State
 
 
-def create_graph(checkpointer: Checkpointer, llm: ChatOpenAI):
+def create_graph(checkpointer: Checkpointer):
     builder = StateGraph(State)
-    builder.add_node(TaskAnalysisNode.name, TaskAnalysisNode(llm))
+    builder.add_node(TaskAnalysisNode.name, TaskAnalysisNode(create_llm(0.2)))
     builder.add_node(TaskQuestionNode.name, TaskQuestionNode())
-    builder.add_node(PlanNode.name, PlanNode(llm))
-    builder.add_node(ExecutionNode.name, ExecutionNode(llm))
-    builder.add_node(ReviewNode.name, ReviewNode(llm))
-    builder.add_node(ReportNode.name, ReportNode(llm))
+    builder.add_node(PlanNode.name, PlanNode(create_llm(0.3)))
+    builder.add_node(ExecutionNode.name, ExecutionNode(create_llm(0.5)))
+    builder.add_node(ReviewNode.name, ReviewNode(create_llm(0.3)))
+    builder.add_node(ReportNode.name, ReportNode(create_llm(0.2)))
     builder.add_node(ReportFeedbackNode.name, ReportFeedbackNode())
-    builder.add_node(ReportFeedbackAnalysisNode.name, ReportFeedbackAnalysisNode(llm))
+    builder.add_node(
+        ReportFeedbackAnalysisNode.name, ReportFeedbackAnalysisNode(create_llm(0.2))
+    )
 
     builder.add_edge(START, TaskAnalysisNode.name)
     builder.add_conditional_edges(

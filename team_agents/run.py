@@ -7,7 +7,6 @@ from langgraph.types import Command
 from psycopg_pool import AsyncConnectionPool
 
 from team_agents.graph import create_graph
-from team_agents.llm import create_llm
 from team_agents.state import State
 from team_agents.utils import log, sanitize_utf8
 
@@ -18,8 +17,7 @@ async def run(state: State | None, config: RunnableConfig):
         checkpointer = AsyncPostgresSaver(pool)  # pyright: ignore[reportArgumentType]
         await checkpointer.setup()
 
-        llm = create_llm()
-        graph = create_graph(checkpointer, llm)
+        graph = create_graph(checkpointer)
 
         current_input = state
         result = None
