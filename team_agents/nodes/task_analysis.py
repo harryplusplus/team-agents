@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from team_agents.nodes.plan import PlanNode
 from team_agents.nodes.task_question import TaskQuestionNode
 from team_agents.state import State, Status
-from team_agents.utils import create_conversation_history, parse_llm_output
+from team_agents.utils import create_conversation_history, log_state, parse_llm_output
 
 
 class Result(BaseModel):
@@ -45,6 +45,7 @@ class TaskAnalysisNode:
                 AIMessage(content="요청이 명확합니다. 계획을 세우겠습니다.")
             )
 
+        log_state(self.name, state)
         return state
 
     def _build_prompt(self, conversation_history: str) -> str:

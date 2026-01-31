@@ -6,6 +6,8 @@ import typer
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 
+from team_agents.state import State
+
 T = TypeVar("T", bound=BaseModel)
 
 
@@ -91,3 +93,10 @@ def log(log):
 
 def sanitize_utf8(text: str):
     return text.encode("utf-8", errors="replace").decode("utf-8")
+
+
+def log_state(name: str, state: State):
+    log(f"=== {name} ===")
+    log(create_conversation_history(state["messages"]))
+    log(f"status: {state['status']}")
+    log("====================")

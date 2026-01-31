@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from team_agents.nodes.plan import PlanNode
 from team_agents.state import State, Status
-from team_agents.utils import create_conversation_history, parse_llm_output
+from team_agents.utils import create_conversation_history, log_state, parse_llm_output
 
 
 class FeedbackAnalysis(BaseModel):
@@ -50,6 +50,7 @@ class ReportFeedbackAnalysisNode:
                 )
             )
 
+        log_state(self.name, state)
         return state
 
     def _build_prompt(self, conversation_history: str) -> str:
