@@ -8,7 +8,7 @@ from psycopg_pool import AsyncConnectionPool
 
 from team_agents.graph import create_graph
 from team_agents.state import State
-from team_agents.utils import log, sanitize_utf8
+from team_agents.utils import create_conversation_history, log, sanitize_utf8
 
 
 async def run(state: State | None, config: RunnableConfig):
@@ -34,7 +34,7 @@ async def run(state: State | None, config: RunnableConfig):
             user_message = typer.prompt(ai_message)
             current_input = Command(resume=sanitize_utf8(user_message))
 
-        log(result)
+        log(create_conversation_history(result["messages"]))
 
     finally:
         await pool.close()
