@@ -12,8 +12,7 @@ from team_agents.utils import create_conversation_history, log, sanitize_utf8
 
 
 async def run(state: State | None, config: RunnableConfig):
-    pool = AsyncConnectionPool(os.environ["DATABASE_URL"])
-    try:
+    async with AsyncConnectionPool(os.environ["DATABASE_URL"]) as pool:
         checkpointer = AsyncPostgresSaver(pool)  # pyright: ignore[reportArgumentType]
         await checkpointer.setup()
 
@@ -35,6 +34,3 @@ async def run(state: State | None, config: RunnableConfig):
             current_input = Command(resume=sanitize_utf8(user_message))
 
         log(create_conversation_history(result["messages"]))
-
-    finally:
-        await pool.close()

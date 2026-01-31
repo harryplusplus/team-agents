@@ -24,7 +24,8 @@ async def new(task_file: Path):
 
     state = State(
         status=Status.IN_PROGRESS,
-        messages=[HumanMessage(content=task)],
+        messages=[],
+        original_request=HumanMessage(content=task),
         plan=None,
         current_step=None,
         step_results=None,

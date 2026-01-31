@@ -32,7 +32,7 @@ class ReportFeedbackAnalysisNode:
     async def __call__(self, state: State) -> State:
         state["status"] = Status.IN_PROGRESS
 
-        conversation_history = create_conversation_history(state["messages"])
+        conversation_history = create_conversation_history(state)
         prompt = self._build_prompt(conversation_history)
         response = await self.llm.ainvoke(prompt)
         result = parse_llm_output(response.content, FeedbackAnalysis)

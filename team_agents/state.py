@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import TypedDict
 
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage, HumanMessage
 
 
 class Status(str, Enum):
@@ -14,14 +14,10 @@ class Status(str, Enum):
     IN_PROGRESS = "in_progress"
 
 
-class Plan(TypedDict):
-    title: str
-    steps: list[str]
-
-
 class State(TypedDict):
     messages: list[BaseMessage]
     status: Status
-    plan: Plan | None
+    original_request: HumanMessage | None
+    plan: dict | None
     current_step: int | None
     step_results: list[str] | None

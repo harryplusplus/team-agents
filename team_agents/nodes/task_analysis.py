@@ -32,7 +32,7 @@ class TaskAnalysisNode:
     async def __call__(self, state: State) -> State:
         state["status"] = Status.IN_PROGRESS
 
-        prompt = self._build_prompt(create_conversation_history(state["messages"]))
+        prompt = self._build_prompt(create_conversation_history(state))
         response = await self.llm.ainvoke(prompt)
         result = parse_llm_output(response.content, Result)
 

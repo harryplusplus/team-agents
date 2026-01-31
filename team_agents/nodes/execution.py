@@ -42,7 +42,7 @@ class ExecutionNode:
         steps = plan["steps"] if plan else []
         current_step = steps[current_step_idx] if steps else "작업 진행"
 
-        conversation_history = create_conversation_history(state["messages"])
+        conversation_history = create_conversation_history(state)
         prompt = self._build_prompt(conversation_history, current_step)
         response = await self.llm.ainvoke(prompt)
 

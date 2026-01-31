@@ -3,7 +3,6 @@ import re
 from typing import TypeVar
 
 import typer
-from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 
 from team_agents.state import State
@@ -83,8 +82,27 @@ def parse_llm_output(
     return schema.model_validate(data)
 
 
-def create_conversation_history(messages: list[BaseMessage]) -> str:
-    return "\n".join(f"{m.type}: {m.content}" for m in messages)
+def create_conversation_history(state: State, limit: int = 10) -> str:
+    parts = []
+
+    # 원래 요청 먼저 추가
+    if state.get("original_request"):
+        parts.append(f"human: {state['original_request']}")
+
+    # 최근 N개 메시지만 사용 (길이 제한)
+    recent = (
+        state["messages"][-limit:]
+        if len(state["messages"]) > limit
+        else state["messages"]
+    )
+    for m in recent:
+        content = str(m.content)
+        # 너무 긴 content는 자르기
+        if len(content) > 500:
+            content = content[:500] + "..."
+        parts.append(f"{m.type}: {content}")
+
+    return "\n".join(parts)
 
 
 def log(log, fg=typer.colors.GREEN):
