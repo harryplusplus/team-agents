@@ -1,47 +1,37 @@
-import os
-from typing import TypedDict
+import asyncio
+from pathlib import Path
 
-import nanoid
+import typer
 from dotenv import load_dotenv
-from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-from langgraph.graph import StateGraph
+
+from team_agents.commands.new import new as new_command
+from team_agents.commands.resume import resume as resume_command
+from team_agents.commands.time_travel import time_travel as time_travel_command
 
 load_dotenv()
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+app = typer.Typer()
 
 
-class State(TypedDict):
-    message: str
+@app.command()
+def new(request_file: Path = typer.Option(..., help="Request file path")):
+    asyncio.run(new_command(request_file))
 
 
-async def hello_node(state: State) -> State:
-    return {"message": f"Hello, {state['message']}!"}
+@app.command()
+def resume(
+    thread_id: str = typer.Option(..., help="Thread ID"),
+):
+    asyncio.run(resume_command(thread_id))
 
 
-async def main():
-    async with AsyncPostgresSaver.from_conn_string(DATABASE_URL) as checkpointer:
-        await checkpointer.setup()
-
-        graph = StateGraph(State)
-
-        graph.add_node("hello", hello_node)
-        graph.set_entry_point("hello")
-        graph.set_finish_point("hello")
-
-        app = graph.compile(checkpointer=checkpointer)
-
-        thread_id = nanoid.generate()
-        print("Running with thread id:", thread_id)
-
-        result = await app.ainvoke(
-            {"message": "world"}, config={"configurable": {"thread_id": thread_id}}
-        )
-
-        print(result)
+@app.command()
+def time_travel(
+    thread_id: str = typer.Option(..., help="Thread ID"),
+    checkpoint_id: str = typer.Option(..., help="Checkpoint ID"),
+):
+    asyncio.run(time_travel_command(thread_id, checkpoint_id))
 
 
 if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
+    app()

@@ -72,3 +72,30 @@ docker --version # Docker version 28.3.2, build 578ccf6
 ```bash
 docker compose up -d
 ```
+
+## 시스템 구조
+
+### 시작 및 재개
+
+프롬프트 또는 툴의 수정 후의 동작을 확인하기 위해서 재개 기능을 최우선으로 구현합니다.
+
+```mermaid
+flowchart TD
+
+init[(init)]
+n1[node 1]
+c1[(checkpoint 1)]
+n2[node 2]
+c2[(checkpoint 2)]
+n3[node 3]
+
+new[`request`<br/>-> `thread_id` 생성 및 시작] --> init
+init --> n1
+n1 --> c1
+c1 --> n2
+n2 --> c2
+c2 --> n3
+
+resume[`thread_id`<br/>재개] --> c2
+time_travel[`thread_id` + `checkpoint_id`<br/>-> 특정 checkpoint부터 재개] --> c1
+```
