@@ -18,7 +18,15 @@ class ReviewNode:
     name = "review"
 
     @staticmethod
-    def to_plan_or_next_step_or_report(state: State) -> str:
+    def path_map():
+        return [
+            PlanNode.name,
+            ExecutionNode.name,
+            ReportNode.name,
+        ]
+
+    @staticmethod
+    def on_path(state: State) -> str:
         status = state["status"]
         if status == Status.TO_PLAN:
             return PlanNode.name
@@ -37,7 +45,9 @@ class ReviewNode:
 
         # 현재 스텝 정보
         plan = state["plan"]
-        current_step_idx = state["current_step"] if state["current_step"] is not None else 0
+        current_step_idx = (
+            state["current_step"] if state["current_step"] is not None else 0
+        )
         steps = plan["steps"] if plan else []
         current_step = steps[current_step_idx] if steps else "작업"
 
@@ -63,7 +73,9 @@ class ReviewNode:
                 # 모든 스텝 완료
                 state["status"] = Status.TO_REPORT
                 state["messages"].append(
-                    AIMessage(content="검토 결과: 모든 작업이 완료되었습니다. 리포트를 작성합니다.")
+                    AIMessage(
+                        content="검토 결과: 모든 작업이 완료되었습니다. 리포트를 작성합니다."
+                    )
                 )
         else:
             # 반려 - 계획부터 다시 (현재는 이 방식)

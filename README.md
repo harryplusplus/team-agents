@@ -91,6 +91,43 @@ docker compose up -d
 
 ## 시스템 구조
 
+### 다이어그램
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	task_analysis(task_analysis)
+	task_question(task_question)
+	plan(plan)
+	execution(execution)
+	review(review)
+	report(report)
+	report_feedback(report_feedback)
+	report_feedback_analysis(report_feedback_analysis)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> task_analysis;
+	execution --> review;
+	plan --> execution;
+	report --> report_feedback;
+	report_feedback --> report_feedback_analysis;
+	report_feedback_analysis -.-> __end__;
+	report_feedback_analysis -.-> plan;
+	review -.-> execution;
+	review -.-> plan;
+	review -.-> report;
+	task_analysis -.-> plan;
+	task_analysis -.-> task_question;
+	task_question --> task_analysis;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+```
+
 ### 시작 및 재개
 
 프롬프트 또는 툴의 수정 후의 동작을 확인하기 위해서 재개 기능을 최우선으로 구현합니다.

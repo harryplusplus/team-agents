@@ -17,7 +17,14 @@ class TaskAnalysisNode:
     name = "task_analysis"
 
     @staticmethod
-    def to_question_or_plan(state: State) -> str:
+    def path_map():
+        return [
+            TaskQuestionNode.name,
+            PlanNode.name,
+        ]
+
+    @staticmethod
+    def on_path(state: State) -> str:
         status = state["status"]
         if status == Status.TO_QUESTION:
             return TaskQuestionNode.name

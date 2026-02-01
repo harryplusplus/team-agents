@@ -17,7 +17,14 @@ class ReportFeedbackAnalysisNode:
     name = "report_feedback_analysis"
 
     @staticmethod
-    def to_plan_or_end(state: State) -> str:
+    def path_map():
+        return [
+            PlanNode.name,
+            END,
+        ]
+
+    @staticmethod
+    def on_path(state: State) -> str:
         status = state["status"]
         if status == Status.TO_PLAN:
             return PlanNode.name
